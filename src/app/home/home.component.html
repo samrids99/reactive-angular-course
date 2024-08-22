@@ -6,12 +6,16 @@
 
     <mat-tab label="Beginners">
 
-      <course-card-list [courses]="beginnerCourses$ | async"></course-card-list>
+    <course-card-list [courses]="beginnerCourses$ | async" (coursesChanged)="reloadCourses()"> <!-- emits the method reloadCourses() when detects an edit on the card -->
+
+      </course-card-list>
 
     </mat-tab>
 
     <mat-tab label="Advanced">
-      <course-card-list [courses]="advancedCourses$ | async"></course-card-list>
+      <course-card-list [courses]="advancedCourses$ | async" (coursesChanged)="reloadCourses()">
+
+      </course-card-list>
     </mat-tab>
 
   </mat-tab-group>
