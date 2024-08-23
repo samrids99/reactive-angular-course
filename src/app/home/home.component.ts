@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course, sortCoursesBySeqNo } from '../model/course';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 
 import { CoursesService } from '../services/courses.service';
 import { LoadingService } from '../loading/loading.service';
@@ -28,9 +28,13 @@ export class HomeComponent implements OnInit {
   }
 
   reloadCourses() {
+
+    this.loadingService.loadingOn();
+
     const courses$ = this.coursesService.loadAllCourses()
       .pipe(
-        map(courses => courses.sort(sortCoursesBySeqNo))
+        map(courses => courses.sort(sortCoursesBySeqNo)),
+        finalize(() => this.loadingService.loadingOff()) // fnialize operator is called when the observable completes or errors out
       );
 
     this.beginnerCourses$ = courses$.pipe(

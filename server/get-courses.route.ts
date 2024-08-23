@@ -17,7 +17,7 @@ export function getAllCourses(req: Request, res: Response) {
 
              res.status(200).json({payload:Object.values(COURSES)});
 
-        }, 200);
+        }, 1500); // simulate server latency to 1.5 seconds
 }
 
 
