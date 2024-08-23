@@ -4,7 +4,9 @@ import { concatMap, finalize, tap } from "rxjs/operators";
 
 @Injectable()
 export class LoadingService {
-    constructor() { }
+    constructor() {
+        console.log('Loading service created');
+     }
 
     private loadingSubject = new BehaviorSubject<boolean>(false); // a subject is similar to an observable but is more like a two way communication channel, whereas an observable is a one way broadcast
 
