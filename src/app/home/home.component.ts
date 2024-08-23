@@ -29,19 +29,18 @@ export class HomeComponent implements OnInit {
 
   reloadCourses() {
 
-    this.loadingService.loadingOn();
-
     const courses$ = this.coursesService.loadAllCourses()
       .pipe(
-        map(courses => courses.sort(sortCoursesBySeqNo)),
-        finalize(() => this.loadingService.loadingOff()) // fnialize operator is called when the observable completes or errors out
+        map(courses => courses.sort(sortCoursesBySeqNo)) // fnialize operator is called when the observable completes or errors out
       );
 
-    this.beginnerCourses$ = courses$.pipe(
+    const loadCourses$ = this.loadingService.showLoaderUntilCompleted(courses$);
+
+    this.beginnerCourses$ = loadCourses$.pipe(
       map(courses => courses.filter(course => course.category == 'BEGINNER'))
     );
 
-    this.advancedCourses$ = courses$.pipe(
+    this.advancedCourses$ = loadCourses$.pipe(
       map(courses => courses.filter(course => course.category == 'ADVANCED'))
     );
   }
