@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {Course} from '../model/course';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Course } from '../model/course';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -11,12 +11,17 @@ import {
   concatMap,
   switchMap,
   withLatestFrom,
-  concatAll, shareReplay, catchError
+  concatAll, shareReplay, catchError,
 } from 'rxjs/operators';
-import {merge, fromEvent, Observable, concat, throwError} from 'rxjs';
-import {Lesson} from '../model/lesson';
+import { merge, fromEvent, Observable, concat, throwError, combineLatest } from 'rxjs';
+import { Lesson } from '../model/lesson';
 import { CoursesService } from '../services/courses.service';
 
+
+interface CourseData {
+  course: Course;
+  lessons: Lesson[];
+}
 
 @Component({
   selector: 'course',
@@ -25,9 +30,7 @@ import { CoursesService } from '../services/courses.service';
 })
 export class CourseComponent implements OnInit {
 
-  course$: Observable<Course>;
-
-  lessons$: Observable<Lesson[]>;
+  data$: Observable<CourseData>;
 
   constructor(private route: ActivatedRoute, private coursesService: CoursesService) {
 
@@ -37,9 +40,20 @@ export class CourseComponent implements OnInit {
   ngOnInit() {
     const courseID = parseInt(this.route.snapshot.paramMap.get("courseId")); // param map always returns a string
 
-    this.course$ = this.coursesService.loadCourseById(courseID);
+    const course$ = this.coursesService.loadCourseById(courseID);
 
-    this.lessons$ = this.coursesService.loadAllCourseLessons(courseID);
+    const lessons$ = this.coursesService.loadAllCourseLessons(courseID);
+
+    this.data$ = combineLatest([course$, lessons$])
+      .pipe(
+        map(([course, lessons]) => {
+          return {
+            course,
+            lessons
+          }
+        }),
+        tap(console.log)
+      );
   }
 
 
