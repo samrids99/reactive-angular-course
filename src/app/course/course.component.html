@@ -1,27 +1,30 @@
 <ng-container *ngIf="(course$ | async) as course">
 
+  <ng-container *ngIf="(lessons$ | async) as lessons">  <!-- there is a better way than nested ng-containers that you'll find in the next commit -->
 
-  <div class="course">
 
-    <h2>{{course?.description}}</h2>
+    <div class="course">
 
-    <img class="course-thumbnail" [src]="course?.iconUrl">
+      <h2>{{course?.description}}</h2>
 
-    <table class="lessons-table mat-elevation-z7">
+      <img class="course-thumbnail" [src]="course?.iconUrl">
 
-      <thead>
-        <th>#</th>
-        <th>Description</th>
-        <th>Duration</th>
-      </thead>
+      <table class="lessons-table mat-elevation-z7">
 
-      <!-- tr class="lesson-row" *ngFor="let lesson of lessons">
+        <thead>
+          <th>#</th>
+          <th>Description</th>
+          <th>Duration</th>
+        </thead>
+
+        <tr class="lesson-row" *ngFor="let lesson of lessons">
         <td class="seqno-cell">{{lesson.seqNo}}</td>
         <td class="description-cell">{{lesson.description}}</td>
         <td class="duration-cell">{{lesson.duration}}</td>
-      </tr -->
+      </tr>
 
-    </table>
+      </table>
 
-  </div>
+    </div>
+  </ng-container>
 </ng-container>
